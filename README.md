@@ -33,4 +33,9 @@ You can install the development version of opiniontext from
 devtools::install_github("JCRascal/opiniontext")
 ```
 
-## Example
+## Data Collection Plan
+
+  - Phase 1: Collect all available slip opinions for the 2019 session
+  - Phase 2: Collect all available slip opinions from 2014 session to
+    present
+  - Phase 3: Collect official bound volumes
