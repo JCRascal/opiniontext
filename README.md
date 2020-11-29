@@ -9,18 +9,24 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-The goal of opiniontext is to …
+## Overview
+
+opiniontext is an ongoing project to build a data package containing
+text of US Supreme Court opinions available publicly at
+SupremeCourt.gov. Text data is to be made readily available in the form
+of text documents, csv, and R objects. Csv and R objects outputted will
+contain the following columns:
+
+  - Case Name
+  - Date
+  - Opinion Type
+  - Author
+  - Text
 
 ## Installation
 
-You can install the released version of opiniontext from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("opiniontext")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+You can install the development version of opiniontext from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
