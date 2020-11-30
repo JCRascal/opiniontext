@@ -67,3 +67,19 @@ test_that("pdf_list correctly identifies target urls of all pdfs on a webpage", 
 
   expect_identical(tester, known)
 })
+
+test_that("opinion_type correctly identifies opinion types for each page", {
+  known <- read.csv("barr_v_pol_cons.csv") %>%
+    tibble::as_tibble() %>%
+    dplyr::select(Type)
+  expect_identical(opinion_type("19-631_2d93.pdf"), known)
+
+})
+
+test_that("opinion_author correctly identifies author for each page", {
+  known  <- read.csv("barr_v_pol_cons.csv") %>%
+    tibble::as_tibble() %>%
+    dplyr::select(Author)
+  expect_identical(opinion_author("19-631_2d93.pdf"), known)
+
+})
