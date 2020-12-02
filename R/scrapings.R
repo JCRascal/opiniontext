@@ -7,3 +7,8 @@ pdf_list <- function(page){
     stringr::str_subset("^((?!diff).)*$") %>%
     stringr::str_c("https://www.supremecourt.gov", .)
 }
+
+
+opinion_author <- function(srcdoc){
+
+}

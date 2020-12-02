@@ -80,6 +80,8 @@ test_that("opinion_author correctly identifies author for each page", {
   known  <- read.csv("barr_v_pol_cons.csv") %>%
     tibble::as_tibble() %>%
     dplyr::select(Author)
-  expect_identical(opinion_author("19-631_2d93.pdf"), known)
+
+  sample_src <- pdftools::pdf_text("19-631_2d93.pdf")
+  expect_identical(opinion_author(sample_src), known)
 
 })
