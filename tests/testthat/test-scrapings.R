@@ -68,20 +68,19 @@ test_that("pdf_list correctly identifies target urls of all pdfs on a webpage", 
   expect_identical(tester, known)
 })
 
-test_that("opinion_type correctly identifies opinion types for each page", {
-  known <- read.csv("barr_v_pol_cons.csv") %>%
-    tibble::as_tibble() %>%
-    dplyr::select(Type)
-  expect_identical(opinion_type("19-631_2d93.pdf"), known)
+test_that("opauth_h1 correctly groups the pages of a slip opinion pdf", {
+  known <-  c(1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+                      2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                      4, 4, 5, 5, 5, 5, 5, 5, 5)
+
+  tester <- opauth_h1(pdftools::pdf_text(system.file("extdata", "19-631_2d93.pdf", package = "opiniontext")))
+
+  expect_identical(tester$group_no, known)
 
 })
 
-test_that("opinion_author correctly identifies author for each page", {
-  known  <- read.csv("barr_v_pol_cons.csv") %>%
-    tibble::as_tibble() %>%
-    dplyr::select(Author)
+test_that("opauth_h2 returns a list with length equal to the number of groups", {
+  tester <- opauth_h2(pdftools::pdf_text(system.file("extdata", "19-631_2d93.pdf", package = "opiniontext")))
 
-  sample_src <- pdftools::pdf_text("19-631_2d93.pdf")
-  expect_identical(opinion_author(sample_src), known)
-
+  expect_equal(length(tester), 5)
 })

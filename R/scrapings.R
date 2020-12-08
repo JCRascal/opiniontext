@@ -32,3 +32,8 @@ opauth_h1 <- function(srcdoc){
   srcdoc %>%
     dplyr::select(-is_first)
 }
+
+
+opauth_h2 <- function(srcdoc) {
+
+}
