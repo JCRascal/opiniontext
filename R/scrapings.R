@@ -35,5 +35,12 @@ opauth_h1 <- function(srcdoc){
 
 
 opauth_h2 <- function(srcdoc) {
+  tmp <- opauth_h1(srcdoc) %>%
+    dplyr::group_by(group_no) %>%
+    dplyr::group_split() %>%
+    purrr::map(dplyr::transmute, "text" = value)
+
+  tmp <- purrr::map(tmp[], dplyr::pull, text ) %>%
+    purrr::map(stringr::str_c, collapse = "")
 
 }
