@@ -7,3 +7,40 @@ pdf_list <- function(page){
     stringr::str_subset("^((?!diff).)*$") %>%
     stringr::str_c("https://www.supremecourt.gov", .)
 }
+
+
+opinion_author <- function(srcdoc){
+
+}
+
+opauth_h1 <- function(srcdoc){
+  srcdoc <- srcdoc %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(is_first = stringr::str_detect(.data$value, "\\r\\nSUPREME COURT OF THE UNITED STATES\\r\\n")) %>%
+    dplyr::mutate(group_no = 1)
+
+  for(i in seq_along(srcdoc$is_first)) {
+    if(i != 1){
+      if (srcdoc$is_first[[i]] == "TRUE"){
+        srcdoc$group_no[[i]] <- srcdoc$group_no[[i - 1]] + 1
+      }
+      else if(srcdoc$is_first[[i]] == "FALSE"){
+        srcdoc$group_no[[i]] <- srcdoc$group_no[[i - 1]]
+      }
+    }
+  }
+  srcdoc %>%
+    dplyr::select(-is_first)
+}
+
+
+opauth_h2 <- function(srcdoc) {
+  tmp <- opauth_h1(srcdoc) %>%
+    dplyr::group_by(group_no) %>%
+    dplyr::group_split() %>%
+    purrr::map(dplyr::transmute, "text" = value)
+
+  tmp <- purrr::map(tmp[], dplyr::pull, text ) %>%
+    purrr::map(stringr::str_c, collapse = "")
+
+}
