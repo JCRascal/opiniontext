@@ -44,3 +44,31 @@ opauth_h2 <- function(srcdoc) {
     purrr::map(stringr::str_c, collapse = "")
 
 }
+
+# opauth_h3 will check an opinion for the word "Syllabus" and if detected will
+# assign as Author; if not detected, opauth_h3 will call opauth_h4 which will
+# perform a similar search for "Per Curiam"
+
+opauth_h3 <- function(char_in){
+
+  tester <- stringr::str_detect(char_in, "Syllabus")
+  ifelse(tester, "Syllabus", opauth_h4(char_in))
+}
+
+opauth_h4 <- function(char_in) {
+  tester <- stringr::str_detect(char_in, "Per Curiam")
+  ifelse(tester, "Per Curiam", "Unknown")
+}
+
+opauth_h5 <- function(char_in) {
+  tester <- stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= announced the judgment of)")
+
+  ifelse(is.na(tester), opauth_h6(char_in), tester)
+}
+
+opauth_h6 <- function(char_in) {
+  tester <- stringr::str_extract(char_in, ".+(?=, J.,)")
+  tester
+
+
+}
