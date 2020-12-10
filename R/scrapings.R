@@ -10,12 +10,12 @@ pdf_list <- function(page){
 
 
 opinion_author <- function(srcdoc){
-  opauth_h2(srcdoc) %>%
-    purrr::map_chr(opauth_h3) %>%
+  prep_text(srcdoc) %>%
+    purrr::map_chr(author_search) %>%
     stringr::str_to_title()
 }
 
-opauth_h1 <- function(srcdoc){
+prep_text_h1 <- function(srcdoc){
   srcdoc <- srcdoc %>%
     tibble::as_tibble() %>%
     dplyr::mutate(is_first = stringr::str_detect(.data$value, "\\r\\nSUPREME COURT OF THE UNITED STATES\\r\\n")) %>%
@@ -36,8 +36,8 @@ opauth_h1 <- function(srcdoc){
 }
 
 
-opauth_h2 <- function(srcdoc) {
-  tmp <- opauth_h1(srcdoc) %>%
+prep_text <- function(srcdoc) {
+  tmp <- prep_text_h1(srcdoc) %>%
     dplyr::group_by(group_no) %>%
     dplyr::group_split() %>%
     purrr::map(dplyr::transmute, "text" = value)
@@ -53,30 +53,30 @@ opauth_h2 <- function(srcdoc) {
 
 
 
-opauth_h3 <- function(char_in){
+author_search <- function(char_in){
 
   tester <- stringr::str_detect(char_in, "Syllabus")
-  ifelse(tester, "Syllabus", opauth_h4(char_in))
+  ifelse(tester, "Syllabus", author_search_h1(char_in))
 }
 
-opauth_h4 <- function(char_in) {
+author_search_h1 <- function(char_in) {
   tester <- stringr::str_detect(char_in, "Per Curiam")
-  ifelse(tester, "Per Curiam", opauth_h5(char_in))
+  ifelse(tester, "Per Curiam", author_search_h2(char_in))
 }
 
-opauth_h5 <- function(char_in) {
+author_search_h2 <- function(char_in) {
   tester <- stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= announced the judgment of)")
 
-  ifelse(is.na(tester), opauth_h6(char_in), tester)
+  ifelse(is.na(tester), author_search_h3(char_in), tester)
 }
 
-opauth_h6 <- function(char_in) {
+author_search_h3 <- function(char_in) {
   tester <- stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= delivered the opinion of)")
 
-  ifelse(is.na(tester), opauth_h7(char_in), tester)
+  ifelse(is.na(tester), author_search_h4(char_in), tester)
 }
 
-opauth_h7 <- function(char_in) {
+author_search_h4 <- function(char_in) {
   tester <- stringr::str_extract(char_in, ".+(?=, J.,)") %>%
     stringr::str_trim()
   tester
