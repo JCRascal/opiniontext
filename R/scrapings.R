@@ -10,7 +10,9 @@ pdf_list <- function(page){
 
 
 opinion_author <- function(srcdoc){
-
+  opauth_h2(srcdoc) %>%
+    purrr::map_chr(opauth_h3) %>%
+    stringr::str_to_title()
 }
 
 opauth_h1 <- function(srcdoc){
@@ -42,5 +44,42 @@ opauth_h2 <- function(srcdoc) {
 
   tmp <- purrr::map(tmp[], dplyr::pull, text ) %>%
     purrr::map(stringr::str_c, collapse = "")
+
+}
+
+# opauth_h3 will check an opinion for the word "Syllabus" and if detected will
+# assign as Author; if not detected, opauth_h3 will call opauth_h4 which will
+# perform a similar search for "Per Curiam"
+
+
+
+opauth_h3 <- function(char_in){
+
+  tester <- stringr::str_detect(char_in, "Syllabus")
+  ifelse(tester, "Syllabus", opauth_h4(char_in))
+}
+
+opauth_h4 <- function(char_in) {
+  tester <- stringr::str_detect(char_in, "Per Curiam")
+  ifelse(tester, "Per Curiam", opauth_h5(char_in))
+}
+
+opauth_h5 <- function(char_in) {
+  tester <- stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= announced the judgment of)")
+
+  ifelse(is.na(tester), opauth_h6(char_in), tester)
+}
+
+opauth_h6 <- function(char_in) {
+  tester <- stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= delivered the opinion of)")
+
+  ifelse(is.na(tester), opauth_h7(char_in), tester)
+}
+
+opauth_h7 <- function(char_in) {
+  tester <- stringr::str_extract(char_in, ".+(?=, J.,)") %>%
+    stringr::str_trim()
+  tester
+
 
 }

@@ -84,3 +84,23 @@ test_that("opauth_h2 returns a list with length equal to the number of groups", 
 
   expect_equal(length(tester), 5)
 })
+
+test_that("opinion_author correctly identifies the author of each pdf sub-document", {
+  test_in <- pdftools::pdf_text(system.file("extdata", "19-631_2d93.pdf", package = "opiniontext"))
+
+  known <- c("Syllabus", "Kavanaugh", "Sotomayor", "Breyer", "Gorsuch")
+
+  expect_identical(opinion_author(test_in), known)
+
+  test_in <- pdftools::pdf_text(system.file("extdata", "18-938_l6gn.pdf", package = "opiniontext"))
+
+  known <- c("Syllabus", "Ginsburg")
+
+  expect_identical(opinion_author(test_in), known)
+
+  test_in <- pdftools::pdf_text(system.file("extdata", "18-725_f2bh.pdf", package = "opiniontext"))
+
+  known <- c("Syllabus", "Kavanaugh", "Sotomayor")
+
+  expect_identical(opinion_author(test_in), known)
+})
