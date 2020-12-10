@@ -1,3 +1,5 @@
+#' @importFrom dplyr %>%
+
 pdf_list <- function(page){
   xml2::read_html(page) %>%
     rvest::html_nodes("a") %>%
