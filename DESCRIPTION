@@ -19,4 +19,5 @@ Imports:
     dplyr,
     rvest,
     tibble,
-    xml2
+    xml2,
+    rlang

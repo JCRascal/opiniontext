@@ -1,13 +1,15 @@
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 
 pdf_list <- function(page){
-  xml2::read_html(page) %>%
+  tmp <- xml2::read_html(page) %>%
     rvest::html_nodes("a") %>%
     rvest::html_attr("href") %>%
     stringr::str_subset("\\.pdf") %>%
     stringr::str_subset("^((?!publicinfo).)*$") %>%
-    stringr::str_subset("^((?!diff).)*$") %>%
-    stringr::str_c("https://www.supremecourt.gov", .)
+    stringr::str_subset("^((?!diff).)*$")
+
+    stringr::str_c("https://www.supremecourt.gov", tmp)
 }
 
 
@@ -34,17 +36,17 @@ prep_text_h1 <- function(srcdoc){
     }
   }
   srcdoc %>%
-    dplyr::select(-is_first)
+    dplyr::select(-.data$is_first)
 }
 
 
 prep_text <- function(srcdoc) {
   tmp <- prep_text_h1(srcdoc) %>%
-    dplyr::group_by(group_no) %>%
+    dplyr::group_by(.data$group_no) %>%
     dplyr::group_split() %>%
-    purrr::map(dplyr::transmute, "text" = value)
+    purrr::map(dplyr::transmute, "text" = .data$value)
 
-  tmp <- purrr::map(tmp[], dplyr::pull, text ) %>%
+  tmp <- purrr::map(tmp[], dplyr::pull, .data$text ) %>%
     purrr::map(stringr::str_c, collapse = "")
 
 }
