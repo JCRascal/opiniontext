@@ -13,7 +13,6 @@ Suggests:
     testthat
 RoxygenNote: 7.1.1
 Imports: 
-<<<<<<< HEAD
     stringr,
     purrr,
     pdftools,
@@ -22,14 +21,3 @@ Imports:
     tibble,
     xml2,
     rlang
-||||||| bbedf72
-    stringr
-=======
-    stringr,
-    purrr,
-    pdftools,
-    dplyr,
-    rvest,
-    tibble,
-    xml2
->>>>>>> fd48c51773d999d305f57206fc6899924d3f5605
