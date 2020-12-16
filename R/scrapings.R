@@ -87,3 +87,20 @@ author_search_h4 <- function(char_in) {
 
 
 }
+
+
+opinion_type <- function(char_in){
+  tester <- stringr::str_detect(char_in, "Syllabus")
+  ifelse(tester, "Syllabus", opinion_type_h1(char_in))
+}
+
+opinion_type_h1 <- function(char_in){
+  tester <- stringr::str_detect(char_in, "Per Curiam")
+  ifelse(tester, "Syllabus", opinion_type_h2(char_in))
+}
+
+opinion_type_h2 <- function(char_in){
+  tester <- stringr::str_detect(char_in, "Syllabus")
+  ifelse(tester, "Syllabus", opinion_type_h3(char_in))
+}
+
