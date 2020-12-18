@@ -88,17 +88,23 @@ test_that("prep_text returns a list with length equal to the number of groups", 
 test_that("opinion_author correctly identifies the author of each pdf sub-document", {
   test_in <- pdftools::pdf_text(system.file("extdata", "19-631_2d93.pdf", package = "opiniontext"))
 
+  test_in <- prep_text(test_in)
+
   known <- c("Syllabus", "Kavanaugh", "Sotomayor", "Breyer", "Gorsuch")
 
   expect_identical(opinion_author(test_in), known)
 
   test_in <- pdftools::pdf_text(system.file("extdata", "18-938_l6gn.pdf", package = "opiniontext"))
 
+  test_in <- prep_text(test_in)
+
   known <- c("Syllabus", "Ginsburg")
 
   expect_identical(opinion_author(test_in), known)
 
   test_in <- pdftools::pdf_text(system.file("extdata", "18-725_f2bh.pdf", package = "opiniontext"))
+
+  test_in <- prep_text(test_in)
 
   known <- c("Syllabus", "Kavanaugh", "Sotomayor")
 
@@ -107,18 +113,21 @@ test_that("opinion_author correctly identifies the author of each pdf sub-docume
 
 test_that("opinion_type correctly identifies the type of each pdf sub-document", {
   test_in <- pdftools::pdf_text(system.file("extdata", "19-631_2d93.pdf", package = "opiniontext"))
+  test_in <- prep_text(test_in)
 
   known <- c("Syllabus", "Majority", "Concurring", "Concurring", "Concurring")
 
   expect_identical(opinion_type(test_in), known)
 
   test_in <- pdftools::pdf_text(system.file("extdata", "18-938_l6gn.pdf", package = "opiniontext"))
+  test_in <- prep_text(test_in)
 
   known <- c("Syllabus", "Majority")
 
   expect_identical(opinion_type(test_in), known)
 
   test_in <- pdftools::pdf_text(system.file("extdata", "18-725_f2bh.pdf", package = "opiniontext"))
+  test_in <- prep_text(test_in)
 
   known <- c("Syllabus", "Majority", "Dissenting")
 

@@ -14,9 +14,14 @@ pdf_list <- function(page){
 
 
 opinion_author <- function(srcdoc){
-  prep_text(srcdoc) %>%
+  srcdoc %>%
     purrr::map_chr(author_search) %>%
     stringr::str_to_title()
+}
+
+opinion_type <- function(srcdoc){
+  srcdoc %>%
+    purrr::map_chr(opinion_type_h0)
 }
 
 prep_text_h1 <- function(srcdoc){
@@ -89,18 +94,38 @@ author_search_h4 <- function(char_in) {
 }
 
 
-opinion_type <- function(char_in){
+
+opinion_type_h0 <- function(char_in){
   tester <- stringr::str_detect(char_in, "Syllabus")
   ifelse(tester, "Syllabus", opinion_type_h1(char_in))
 }
 
 opinion_type_h1 <- function(char_in){
   tester <- stringr::str_detect(char_in, "Per Curiam")
-  ifelse(tester, "Syllabus", opinion_type_h2(char_in))
+  ifelse(tester, "Majority", opinion_type_h2(char_in))
 }
 
 opinion_type_h2 <- function(char_in){
-  tester <- stringr::str_detect(char_in, "Syllabus")
-  ifelse(tester, "Syllabus", opinion_type_h3(char_in))
+  tester <- stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= announced the judgment of)")
+
+  ifelse(is.na(tester), opinion_type_h3(char_in), "Majority")
 }
 
+opinion_type_h3 <- function(char_in){
+  tester <- stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= delivered the opinion of)")
+
+  char_in <- char_in %>%
+    stringr::str_trunc(500)
+
+  ifelse(is.na(tester), opinion_type_h4(char_in), "Majority")
+}
+
+opinion_type_h4 <- function(char_in){
+  tester <- stringr::str_detect(char_in, ", J., concurring")
+  ifelse(tester, "Concurring", opinion_type_h5(char_in))
+}
+
+opinion_type_h5 <- function(char_in){
+  tester <- stringr::str_detect(char_in, ", J., dissenting")
+  ifelse(tester, "Dissenting", "Juice")
+}
