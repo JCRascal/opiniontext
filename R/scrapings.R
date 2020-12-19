@@ -24,6 +24,17 @@ opinion_type <- function(srcdoc){
     purrr::map_chr(opinion_type_h0)
 }
 
+text_clean <- function(srcdoc){
+  srcdoc %>%
+    purrr::map_chr(text_clean_h1)
+}
+
+text_clean_h1 <- function(char_in){
+  char_in %>%
+    stringr::str_replace_all("-\\r\\n", "") %>%
+    stringr::str_replace_all("\\r\\n", " ")
+}
+
 prep_text_h1 <- function(srcdoc){
   srcdoc <- srcdoc %>%
     tibble::as_tibble() %>%
@@ -129,3 +140,5 @@ opinion_type_h5 <- function(char_in){
   tester <- stringr::str_detect(char_in, ", J., dissenting")
   ifelse(tester, "Dissenting", "Juice")
 }
+
+
