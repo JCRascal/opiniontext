@@ -3,13 +3,23 @@
 
 pdf_list <- function(page){
   tmp <- xml2::read_html(page) %>%
-    rvest::html_nodes("a") %>%
+    rvest::html_nodes("a")
+
+  tmp_list <- tibble::tibble("link" = rvest::html_attr(tmp, "href"), "case" = rvest::html_text(tmp))
+
+  tmp <- tmp %>%
     rvest::html_attr("href") %>%
     stringr::str_subset("\\.pdf") %>%
     stringr::str_subset("^((?!publicinfo).)*$") %>%
     stringr::str_subset("^((?!diff).)*$")
 
-    stringr::str_c("https://www.supremecourt.gov", tmp)
+  tmp <- tibble::tibble("link" = tmp)
+
+  tmp_list <- dplyr::semi_join(tmp_list, tmp, by = "link")
+
+  tmp_list$link <- stringr::str_c("https://www.supremecourt.gov", tmp_list$link)
+
+  tmp_list
 }
 
 

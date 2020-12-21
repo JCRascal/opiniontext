@@ -65,7 +65,7 @@ test_that("pdf_list correctly identifies target urls of all pdfs on a webpage", 
              "https://www.supremecourt.gov/opinions/19pdf/18-328_pm02.pdf",
              "https://www.supremecourt.gov/opinions/19pdf/19-122_k536.pdf")
 
-  expect_identical(tester, known)
+  expect_identical(tester$link, known)
 })
 
 test_that("prep_text_h1 correctly groups the pages of a slip opinion pdf", {
