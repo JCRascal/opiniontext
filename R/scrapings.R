@@ -81,9 +81,27 @@ prep_text <- function(srcdoc) {
 # assign as Author; if not detected, opauth_h3 will call opauth_h4 which will
 # perform a similar search for "Per Curiam"
 
+author_search <- function(char_in) {
+  tmp <- author_search_detect(char_in, "Syllabus")
+  tmp <- ifelse(is.na(tmp), author_search_detect(char_in, "Per Curiam"), tmp)
+  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= announced the judgment of)"), tmp)
+  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= delivered the opinion of)"), tmp)
+  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, C. J.,)"), tmp)
+  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, C.J.,)"), tmp)
+  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, J.)"), tmp)
+
+  tmp %>%
+    stringr::str_trim()
+
+}
 
 
-author_search <- function(char_in){
+author_search_detect <- function(char_in, pattern) {
+  ifelse(stringr::str_detect(char_in, pattern), pattern, NA)
+}
+
+
+author_search2 <- function(char_in){
 
   tester <- stringr::str_detect(char_in, "Syllabus")
   ifelse(tester, "Syllabus", author_search_h1(char_in))
