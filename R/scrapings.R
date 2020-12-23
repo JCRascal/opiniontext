@@ -31,7 +31,7 @@ opinion_author <- function(srcdoc){
 
 opinion_type <- function(srcdoc){
   srcdoc %>%
-    purrr::map_chr(opinion_type_h0)
+    purrr::map_chr(opinion_type2)
 }
 
 text_clean <- function(srcdoc){
@@ -81,14 +81,40 @@ prep_text <- function(srcdoc) {
 # assign as Author; if not detected, opauth_h3 will call opauth_h4 which will
 # perform a similar search for "Per Curiam"
 
-author_search <- function(char_in) {
+author_search <- function(char_in){
+  patterns <- c("(Syllabus)", "(Per Curiam)",
+                "((?<=Opinion of  )(.{1,15})(?=, J.))",
+                "((?<=JUSTICE ).+(?= announced the judgment of))",
+                "((?<=JUSTICE ).+(?= delivered the opinion of))",
+                "(.+(?=, J. ?, dissenting))", "(.+(?=, J., ?concurring))",
+                "(.+(?=, C. ?J. ?, dissenting))", "(.+(?=, C. ?J. ?, concurring))",
+                "((?<=CHIEF JUSTICE ).+(?=, (concurring)|(dissenting)))"
+  )
+
+  patterns <- stringr::str_c(patterns, collapse = "|")
+
+  char_in <- char_in %>%
+    stringr::str_trunc(2000)
+
+  char_in %>%
+    stringr::str_extract(patterns) %>%
+    stringr::str_trim()
+}
+
+author_search2 <- function(char_in) {
+  char_in <- char_in %>%
+    stringr::str_trunc(2000)
+
   tmp <- author_search_detect(char_in, "Syllabus")
   tmp <- ifelse(is.na(tmp), author_search_detect(char_in, "Per Curiam"), tmp)
   tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= announced the judgment of)"), tmp)
   tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, "(?<=JUSTICE ).+(?= delivered the opinion of)"), tmp)
-  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, C. J.,)"), tmp)
-  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, C.J.,)"), tmp)
-  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, J.)"), tmp)
+  #tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, C. J.,)"), tmp)
+  #tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, C.J.,)"), tmp)
+  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, C?.? ?J., dissenting)"), tmp)
+  #tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, J. , dissenting)"), tmp)
+  tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, C?.? ?J., concurring)"), tmp)
+  #tmp <- ifelse(is.na(tmp), stringr::str_extract(char_in, ".+(?=, J. , concurring)"), tmp)
 
   tmp %>%
     stringr::str_trim()
@@ -101,11 +127,11 @@ author_search_detect <- function(char_in, pattern) {
 }
 
 
-author_search2 <- function(char_in){
-
-  tester <- stringr::str_detect(char_in, "Syllabus")
-  ifelse(tester, "Syllabus", author_search_h1(char_in))
-}
+# author_search2 <- function(char_in){
+#
+#   tester <- stringr::str_detect(char_in, "Syllabus")
+#   ifelse(tester, "Syllabus", author_search_h1(char_in))
+# }
 
 author_search_h1 <- function(char_in) {
   tester <- stringr::str_detect(char_in, "Per Curiam")
@@ -133,6 +159,27 @@ author_search_h4 <- function(char_in) {
 }
 
 
+opinion_type2 <- function(char_in){
+  patterns <- c(
+    "((Syllabus)|(Per Curiam))",
+    "(( ((announced)|(delivered)) the ((judgment)|(opinion)) of))",
+    "((, (C. J.)|(J.), ((concurring)|(dissenting))))"
+  )
+
+
+  patterns <- stringr::str_c(patterns, collapse = "|")
+
+  char_in <- stringr::str_trunc(char_in, 2000)
+
+  tmp <- stringr::str_extract(char_in, patterns)
+
+  tmp <- ifelse(stringr::str_detect(tmp, "Per Curiam"), "Majority", tmp)
+  tmp <- ifelse(stringr::str_detect(tmp, "the ((judgment)|(opinion)) of"), "Majority", tmp)
+  tmp <- ifelse(stringr::str_detect(tmp, "dissenting"), "Dissenting", tmp)
+  tmp <- ifelse(stringr::str_detect(tmp, "concurring"), "Concurring", tmp)
+
+  tmp
+}
 
 opinion_type_h0 <- function(char_in){
   tester <- stringr::str_detect(char_in, "Syllabus")

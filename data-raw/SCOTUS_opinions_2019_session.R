@@ -7,3 +7,4 @@ SCOTUS_opinions_2019_session %>%
   write.csv("data-raw/SCOTUS_opinions_2019_session.csv")
 
 usethis::use_data(SCOTUS_opinions_2019_session, overwrite = TRUE)
+
