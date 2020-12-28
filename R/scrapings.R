@@ -86,9 +86,10 @@ author_search <- function(char_in){
                 "((?<=Opinion of  )(.{1,15})(?=, J.))",
                 "((?<=JUSTICE ).+(?= announced the judgment of))",
                 "((?<=JUSTICE ).+(?= delivered the opinion of))",
+                "((?<=JUSTICE ).+(?=, with whom))",
                 "(.+(?=, J. ?, dissenting))", "(.+(?=, J., ?concurring))",
                 "(.+(?=, C. ?J. ?, dissenting))", "(.+(?=, C. ?J. ?, concurring))",
-                "((?<=CHIEF JUSTICE ).+(?=, (concurring)|(dissenting)))"
+                "((?<=(CHIEF )?JUSTICE ).+(?=, ((concurring)|(dissenting))))"
   )
 
   patterns <- stringr::str_c(patterns, collapse = "|")
@@ -163,7 +164,8 @@ opinion_type2 <- function(char_in){
   patterns <- c(
     "((Syllabus)|(Per Curiam))",
     "(( ((announced)|(delivered)) the ((judgment)|(opinion)) of))",
-    "((((C. J.)|(J.)), ((concurring)|(dissenting))))"
+    "((((C. J.)|(J.)), ((concurring)|(dissenting))))",
+    "(JUSTICE ).+, ?((concurring)|(dissenting))"
   )
 
 
