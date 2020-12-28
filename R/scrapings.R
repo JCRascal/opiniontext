@@ -83,13 +83,16 @@ prep_text <- function(srcdoc) {
 
 author_search <- function(char_in){
   patterns <- c("(Syllabus)", "(Per Curiam)",
-                "((?<=Opinion of  )(.{1,15})(?=, J.))",
+                "((?<=Opinion of  )(.{1,15})(?=, J\\.))",
                 "((?<=JUSTICE ).+(?= announced the judgment of))",
                 "((?<=JUSTICE ).+(?= delivered the opinion of))",
                 "((?<=JUSTICE ).+(?=, with whom))",
-                "(.+(?=, J. ?, dissenting))", "(.+(?=, J., ?concurring))",
-                "(.+(?=, C. ?J. ?, dissenting))", "(.+(?=, C. ?J. ?, concurring))",
-                "((?<=(CHIEF )?JUSTICE ).+(?=, ((concurring)|(dissenting))))"
+                "(.+(?=, J\\. ?, dissenting))", "(.+(?=, J\\., ?concurring))",
+                "(.+(?=, C\\. ?J\\. ?, dissenting))", "(.+(?=, C\\. ?J\\. ?, concurring))",
+                "((?<=(CHIEF )?JUSTICE ).+(?=, ((concurring in part))))",
+                "((?<=(CHIEF )?JUSTICE ).+(?=, ((concurring)|(dissenting))))",
+                "((?<=Statement of JUSTICE ).+(?=\\.))"
+                #"(?=Statement of ).+(?<=, J.)"
   )
 
   patterns <- stringr::str_c(patterns, collapse = "|")
@@ -164,8 +167,9 @@ opinion_type2 <- function(char_in){
   patterns <- c(
     "((Syllabus)|(Per Curiam))",
     "(( ((announced)|(delivered)) the ((judgment)|(opinion)) of))",
-    "((((C. J.)|(J.)), ((concurring)|(dissenting))))",
-    "(JUSTICE ).+, ?((concurring)|(dissenting))"
+    "((((C\\. J\\.)|(J\\.)), ((concurring)|(dissenting))))",
+    "(JUSTICE ).+, ?((concurring)|(dissenting))",
+    "((Statement of JUSTICE ).+(\\.))"
   )
 
 
@@ -179,6 +183,7 @@ opinion_type2 <- function(char_in){
   tmp <- ifelse(stringr::str_detect(tmp, "the ((judgment)|(opinion)) of"), "Majority", tmp)
   tmp <- ifelse(stringr::str_detect(tmp, "dissenting"), "Dissenting", tmp)
   tmp <- ifelse(stringr::str_detect(tmp, "concurring"), "Concurring", tmp)
+  tmp <- ifelse(stringr::str_detect(tmp, "Statement"), "Statement", tmp)
 
   tmp
 }
