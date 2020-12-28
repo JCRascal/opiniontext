@@ -163,7 +163,7 @@ opinion_type2 <- function(char_in){
   patterns <- c(
     "((Syllabus)|(Per Curiam))",
     "(( ((announced)|(delivered)) the ((judgment)|(opinion)) of))",
-    "((, (C. J.)|(J.), ((concurring)|(dissenting))))"
+    "((((C. J.)|(J.)), ((concurring)|(dissenting))))"
   )
 
 
