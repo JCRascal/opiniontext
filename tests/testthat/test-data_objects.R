@@ -18,7 +18,7 @@ test_that("opinions_2019.csv has valid values for author and type", {
   known_auth <- read.csv(system.file("extdata", "authors.csv", package = "opiniontext"))
   known_types <- tibble::tibble(type = c("Syllabus", "Majority", "Dissenting", "Concurring", "Statement"))
 
-  test_data <- read.csv(system.file("data-raw", "opinions_2019.csv", package = "opiniontext")) %>%
+  test_data <- read.csv(system.file("extdata", "opinions_2019.csv", package = "opiniontext")) %>%
     dplyr::select(2:5)
 
   test_auth <- dplyr::anti_join(test_data, known_auth, by = "author")
