@@ -1,24 +1,24 @@
-test_that("SCOTUS_opinions_2019_session has valid values for type", {
+test_that("opinions_2019 has valid values for type", {
   known_types <- tibble::tibble(type = c("Syllabus", "Majority", "Dissenting", "Concurring", "Statement"))
-  tester <- SCOTUS_opinions_2019_session %>%
+  tester <- opinions_2019 %>%
     dplyr::anti_join(known_types, by = "type")
 
   expect_equal(nrow(tester), 0)
 })
 
-test_that("SCOTUS_opinions_2019_session has valid values for author", {
+test_that("opinions_2019 has valid values for author", {
   known <- read.csv(system.file("extdata", "authors.csv", package = "opiniontext"))
 
-  test <- dplyr::anti_join(SCOTUS_opinions_2019_session, known, by = "author")
+  test <- dplyr::anti_join(opinions_2019, known, by = "author")
 
   expect_equal(nrow(test), 0)
 })
 
-test_that("SCOTUS_opinions_2019_session.csv has valid values for author and type", {
+test_that("opinions_2019.csv has valid values for author and type", {
   known_auth <- read.csv(system.file("extdata", "authors.csv", package = "opiniontext"))
   known_types <- tibble::tibble(type = c("Syllabus", "Majority", "Dissenting", "Concurring", "Statement"))
 
-  test_data <- read.csv(system.file("data-raw", "SCOTUS_opinions_2019_session.csv", package = "opiniontext")) %>%
+  test_data <- read.csv(system.file("data-raw", "opinions_2019.csv", package = "opiniontext")) %>%
     dplyr::select(2:5)
 
   test_auth <- dplyr::anti_join(test_data, known_auth, by = "author")
@@ -28,10 +28,10 @@ test_that("SCOTUS_opinions_2019_session.csv has valid values for author and type
   expect_equal(nrow(test_type), 0)
 })
 
-test_that("SCOTUS_opinions_2019_session has valid values for author", {
+test_that("opinions_2019 has valid values for author", {
   known <- read.csv(system.file("extdata", "authors.csv", package = "opiniontext"))
 
-  test <- dplyr::anti_join(SCOTUS_opinions_2019_session, known, by = "author")
+  test <- dplyr::anti_join(opinions_2019, known, by = "author")
 
   expect_equal(nrow(test), 0)
 })
