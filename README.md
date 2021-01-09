@@ -42,6 +42,8 @@ library(dplyr)
 library(ggplot2)
 
 case_words <- opinions_2019 %>%
+  filter(author != "Per Curiam") %>%
+  filter(author != "Syllabus") %>%
   unnest_tokens(word, text) %>%
   anti_join(get_stopwords(), by = "word") %>%
   count(author, word, sort = TRUE)
@@ -55,14 +57,14 @@ case_words <- case_words %>%
 case_plot <- case_words %>%
   bind_tf_idf(word, author, n) %>%
   group_by(author) %>%
-  slice_max(tf_idf, n = 15) %>%
+  slice_max(tf_idf, n = 10) %>%
   ungroup() %>%
   mutate(word = reorder_within(word, tf_idf, author))
 
 ggplot(case_plot, aes(word, tf_idf, fill = author)) +
   geom_col(show.legend = FALSE) +
   labs(x = NULL, y = "tf-idf") +
-  facet_wrap(~author, ncol = 2, scales = "free") +
+  facet_wrap(~author, ncol = 4, scales = "free") +
   coord_flip() +
   scale_x_reordered()
 ```
