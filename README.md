@@ -33,9 +33,46 @@ You can install the development version of opiniontext from
 devtools::install_github("JCRascal/opiniontext")
 ```
 
+## Sample Usage
+
+``` r
+library(opiniontext)
+library(tidytext)
+library(dplyr)
+library(ggplot2)
+
+case_words <- opinions_2019 %>%
+  unnest_tokens(word, text) %>%
+  anti_join(get_stopwords(), by = "word") %>%
+  count(author, word, sort = TRUE)
+  
+case_words <- case_words %>%
+  group_by(author) %>%
+  summarize(total = sum(n)) %>%
+  right_join(case_words) %>%
+  filter(nchar(word) > 2)
+
+case_plot <- case_words %>%
+  bind_tf_idf(word, author, n) %>%
+  group_by(author) %>%
+  slice_max(tf_idf, n = 15) %>%
+  ungroup() %>%
+  mutate(word = reorder_within(word, tf_idf, author))
+
+ggplot(case_plot, aes(word, tf_idf, fill = author)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = NULL, y = "tf-idf") +
+  facet_wrap(~author, ncol = 2, scales = "free") +
+  coord_flip() +
+  scale_x_reordered()
+```
+
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+
 ## Data Collection Plan
 
-  - Phase 1: Collect all available slip opinions for the 2019 session
+  - ~~Phase 1: Collect all available slip opinions for the 2019
+    session~~
   - Phase 2: Collect all available slip opinions from 2014 session to
     present
   - Phase 3: Collect official bound volumes
