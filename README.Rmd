@@ -42,7 +42,7 @@ devtools::install_github("JCRascal/opiniontext")
 
 ## Sample Usage
 
-```{r, message = FALSE}
+```{r plottf, dependson = "book_words", fig.height=6, fig.width=6, fig.cap="Term frequency distribution in Supreme Court Opinions by Author", message = FALSE}
 library(opiniontext)
 library(tidytext)
 library(dplyr)
@@ -71,7 +71,7 @@ case_plot <- case_words %>%
 ggplot(case_plot, aes(word, tf_idf, fill = author)) +
   geom_col(show.legend = FALSE) +
   labs(x = NULL, y = "tf-idf") +
-  facet_wrap(~author, ncol = 4, scales = "free") +
+  facet_wrap(~author, ncol = 3, scales = "free") +
   coord_flip() +
   scale_x_reordered()
   

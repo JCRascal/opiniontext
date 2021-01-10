@@ -64,12 +64,22 @@ case_plot <- case_words %>%
 ggplot(case_plot, aes(word, tf_idf, fill = author)) +
   geom_col(show.legend = FALSE) +
   labs(x = NULL, y = "tf-idf") +
-  facet_wrap(~author, ncol = 4, scales = "free") +
+  facet_wrap(~author, ncol = 3, scales = "free") +
   coord_flip() +
   scale_x_reordered()
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<div class="figure">
+
+<img src="man/figures/README-plottf-1.png" alt="Term frequency distribution in Supreme Court Opinions by Author" width="100%" />
+
+<p class="caption">
+
+Term frequency distribution in Supreme Court Opinions by Author
+
+</p>
+
+</div>
 
 ## Data Collection Plan
 
